@@ -5,15 +5,25 @@ function startExperience() {
   if (music) {
     music.volume = 0.3;
 
-    // 🔥 force unlock audio properly
+    // 🔥 unlock audio properly
     music.muted = true;
-    music.play().then(() => {
-      music.muted = false;
-    }).catch(() => {
-      console.log("Still blocked");
-    });
+
+    const playPromise = music.play();
+
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        music.muted = false;
+      }).catch(() => {
+        // fallback: play on next click
+        document.body.addEventListener("click", () => {
+          music.muted = false;
+          music.play();
+        }, { once: true });
+      });
+    }
   }
 
+  // fade intro (ONLY ONCE)
   intro.style.opacity = "0";
   setTimeout(() => {
     intro.style.display = "none";
