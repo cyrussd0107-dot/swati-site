@@ -1,13 +1,25 @@
 function startExperience() {
   const music = document.getElementById("bgMusic");
+  const intro = document.getElementById("intro");
 
   if (music) {
     music.volume = 0.3;
-    music.play();
+
+    const playPromise = music.play();
+
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        console.log("Music started 🎵");
+      }).catch(() => {
+        // fallback if browser blocks
+        document.body.addEventListener("click", () => {
+          music.play();
+        }, { once: true });
+      });
+    }
   }
 
-  const intro = document.getElementById("intro");
-
+  // fade intro
   intro.style.opacity = "0";
   setTimeout(() => {
     intro.style.display = "none";
