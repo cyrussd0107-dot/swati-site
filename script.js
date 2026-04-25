@@ -5,19 +5,20 @@ function startExperience() {
   if (music) {
     music.volume = 0.3;
 
-    const playPromise = music.play();
-
-    if (playPromise !== undefined) {
-      playPromise.then(() => {
-        console.log("Music started 🎵");
-      }).catch(() => {
-        // fallback if browser blocks
-        document.body.addEventListener("click", () => {
-          music.play();
-        }, { once: true });
-      });
-    }
+    // 🔥 force unlock audio properly
+    music.muted = true;
+    music.play().then(() => {
+      music.muted = false;
+    }).catch(() => {
+      console.log("Still blocked");
+    });
   }
+
+  intro.style.opacity = "0";
+  setTimeout(() => {
+    intro.style.display = "none";
+  }, 500);
+}
 
   // fade intro
   intro.style.opacity = "0";
